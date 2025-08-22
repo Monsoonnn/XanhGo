@@ -24,6 +24,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import SplashScreen from './src/screens/SplashSceens';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -91,6 +92,7 @@ function App(): React.JSX.Element {
           </Section>
           <LearnMoreLinks />
         </View>
+        <SplashScreen/>
       </ScrollView>
     </SafeAreaView>
   );
