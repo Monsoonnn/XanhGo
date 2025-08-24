@@ -1,0 +1,101 @@
+import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import Icon from 'react-native-vector-icons/Entypo';
+import  {useState} from 'react';
+import { Dimensions } from "react-native";
+type OnboardProps = {
+  onFinish: () => void;
+};
+
+const { width } = Dimensions.get("window");
+
+const steps = [
+  {
+    image: require('../../assets/onboard/rabbit_1.png'),
+    title: 'Giảm Carbon!',
+    description: 'Sử dụng phương tiện công cộng giúp giảm ô nhiễm, bảo vệ môi trường.',
+   
+  },
+  {
+    image: require('../../assets/onboard/human_1.png'),
+    title: 'Chạm là đi',
+    description: 'Dùng thẻ XanhGo hoặc ví điện tử để quét mã, lên xe ngay!',
+    
+  },
+  {
+    image: require('../../assets/onboard/human_2.png'),
+    title: 'Xanh càng lớn!',
+    description: 'Sử dụng giao thông công cộng, giảm khí thải CO₂ và nhận thưởng hấp dẫn!',
+    // imageStyle: {width: 180, height: 180},
+  },
+  {
+    image: require('../../assets/onboard/rabbit_2.png'),
+    title: 'Sẵn sàng ?',
+    description: 'Thuận tiện – Bảo vệ môi trường!\nBắt đầu hành trình xanh ngay hôm nay!',
+    imageStyle: { marginLeft: width * 0.3 },
+  },
+];
+
+
+export default function Onboard({onFinish}: OnboardProps): React.JSX.Element {
+  const [step, setStep] = useState(0);
+
+  const nextStep = () => {
+    if (step < steps.length - 1) {
+      setStep(step + 1);
+    } else {
+      onFinish();
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <Image source={steps[step].image}  style={steps[step].imageStyle || {}}  />
+
+      <Text style={styles.title}>{steps[step].title}</Text>
+
+      <Text style={styles.description}>{steps[step].description}</Text>
+
+      <TouchableOpacity style={styles.roundButton} onPress={nextStep}>
+        <Icon name="chevron-right" style={styles.arrow} />
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+//   image: {
+//     width: 200,
+//     height: 200,
+//     resizeMode: 'contain',
+//     marginBottom: 20,
+//   },
+  title: {
+    fontSize: 22,
+    fontWeight: '700',
+    marginBottom: 10,
+  },
+  description: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  roundButton: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  arrow: {
+    color: 'white',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+});
