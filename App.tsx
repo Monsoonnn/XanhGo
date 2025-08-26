@@ -13,7 +13,7 @@ function App(): React.JSX.Element {
   enableScreens();
 
   return (
-     <AppNavigator />
+    <AppNavigator />
   );
 }
 
