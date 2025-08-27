@@ -1,6 +1,6 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import Fonts from "../../constants/font";
-
+const { width } = Dimensions.get("window");
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -221,7 +221,7 @@ export const styles = StyleSheet.create({
     fontWeight: '500',
   },
   promotionImage: {
-    width: "100%",
+    width: width * 0.925,
     // height: 60,
     borderRadius: 24,
     aspectRatio: 16 / 9,
@@ -290,11 +290,12 @@ export const styles = StyleSheet.create({
   },
   nearbyCard: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: '#F1F5EA',
     borderRadius: 8,
     padding: 12,
     elevation: 2,
     alignItems: 'center',
+    gap: 12,
   },
   nearbyImageContainer: {
     width: 60,
@@ -306,7 +307,7 @@ export const styles = StyleSheet.create({
     marginRight: 12,
   },
   nearbyInfo: {
-    flex: 1,
+    marginRight: 45,
   },
   nearbyTitle: {
     fontSize: 16,
