@@ -6,6 +6,8 @@ import SplashScreen from 'react-native-splash-screen';
 import Storage from '../utils/storage';
 import Home from '../screens/home';
 import Onboard from '../screens/OnBoarding';
+import Leaderboard from '../screens/Leaderboard';
+import RewardScreen from '../screens/Reward';
 
 
 export default function AppNavigator() {
@@ -36,6 +38,15 @@ export default function AppNavigator() {
       screen: Home,
       options: { headerShown: false },
     },
+    Leaderboard: {
+      screen: Leaderboard,
+      options: { headerShown: false },
+    },
+    Reward: {
+      screen: RewardScreen,
+      options: { headerShown: false },
+    }
+
     },
     config: {
       initialRouteName: firstTime ? 'Onboard' : 'Home',
