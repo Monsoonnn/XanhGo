@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import * as React from 'react';
+import { createStaticNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
 
 import Storage from '../utils/storage';
-import { getScreens } from './screen.tsx';
+import Home from '../screens/home';
+import Onboard from '../screens/OnBoarding';
 
-const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
-  const [firstTime, setFirstTime] = useState<boolean | null>(null);
+  const [firstTime, setFirstTime] = React.useState<boolean | false>(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const checkFirstTime = async () => {
       const value = await Storage.getItem('firstTime');
       if (value === null) {
@@ -25,27 +25,25 @@ export default function AppNavigator() {
     SplashScreen.hide();
   }, []);
 
-  const handleFinishOnboard = async () => {
-    await Storage.setItem('firstTime', false);
-    setFirstTime(false);
-  };
 
-  if (firstTime === null) return null;
+  const RootStack = createNativeStackNavigator({
+  screens: {
+    Onboard: {
+      screen: Onboard,
+      options: { headerShown: false },
+    },
+    Home: {
+      screen: Home,
+      options: { headerShown: false },
+    },
+    },
+    config: {
+      initialRouteName: firstTime ? 'Onboard' : 'Home',
+    },
+  });
 
-  const screens = getScreens(firstTime, handleFinishOnboard);
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {screens.map(({ name, component, options }) => (
-          <Stack.Screen
-            key={name}
-            name={name}
-            component={component}
-            options={options}
-          />
-        ))}
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+  const Navigation = createStaticNavigation(RootStack);
+
+  return <Navigation />;
 }
