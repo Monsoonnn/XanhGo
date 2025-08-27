@@ -1,10 +1,10 @@
 import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import SignUpScreen from '../screens/OnBoarding/SignUpScreen';
-import OTPScreen from '../screens/OnBoarding/OTPScreen';
-import LoadingScreen from '../screens/OnBoarding/LoadingScreen';
-import SetGoalScreen from '../screens/OnBoarding/SetGoalScreen';
+import SignUpScreen from '../screens/SignUp';
+import OTPScreen from '../screens/OTP';
+import LoadingScreen from '../screens/Loading';
+import SetGoalScreen from '../screens/SetGoal';
 
 const Stack = createNativeStackNavigator();
 
