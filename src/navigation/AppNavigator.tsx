@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
 
 import Storage from '../utils/storage';
-import { getScreens } from './screen.tsx';
+import { getScreens } from './screen';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,11 +32,18 @@ export default function AppNavigator() {
 
   if (firstTime === null) return null;
 
+  // Lấy danh sách màn hình (getScreens xử lý firstTime internals)
   const screens = getScreens(firstTime, handleFinishOnboard);
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        screenOptions={{
+          headerTitleAlign: 'center',
+          headerStyle: { backgroundColor: '#F8FAF5' },
+          headerTintColor: '#333',
+        }}
+      >
         {screens.map(({ name, component, options }) => (
           <Stack.Screen
             key={name}
