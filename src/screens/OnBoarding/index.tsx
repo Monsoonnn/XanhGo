@@ -2,6 +2,11 @@ import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import  {useState} from 'react';
 import { Dimensions } from "react-native";
+import Storage from '../../utils/storage';
+import { useNavigation } from '@react-navigation/native';
+import Home from '../home';
+import Fonts from '../../constants/font';
+
 type OnboardProps = {
   onFinish: () => void;
 };
@@ -12,7 +17,7 @@ const steps = [
   {
     image: require('../../assets/onboard/rabbit_1.png'),
     title: 'Giảm Carbon!',
-    description: 'Sử dụng phương tiện công cộng giúp giảm ô nhiễm, bảo vệ môi trường.',
+    description: 'Sử dụng phương tiện công cộng giúp \n giảm ô nhiễm, bảo vệ môi trường.',
    
   },
   {
@@ -36,16 +41,25 @@ const steps = [
 ];
 
 
+
 export default function Onboard({onFinish}: OnboardProps): React.JSX.Element {
   const [step, setStep] = useState(0);
+  const navigation = useNavigation<any>();
+
+  const handleFinishOnboard = async () => {
+    await Storage.setItem('firstTime', true);
+    navigation.navigate('Home');
+  };
 
   const nextStep = () => {
     if (step < steps.length - 1) {
       setStep(step + 1);
     } else {
-      onFinish();
+      handleFinishOnboard();
     }
   };
+
+  
 
   return (
     <View style={styles.container}>
@@ -76,13 +90,15 @@ const styles = StyleSheet.create({
 //     marginBottom: 20,
 //   },
   title: {
-    fontSize: 22,
-    fontWeight: '700',
+    fontFamily: Fonts.DelaGothicOne,
+    fontSize: 36,
     marginBottom: 10,
+    marginTop: 2,
   },
   description: {
-    fontSize: 16,
-    textAlign: 'center',
+    fontFamily: Fonts.Montserrat.Regular,
+    fontSize: 18,
+    textAlign: 'center',  
     marginBottom: 20,
   },
   roundButton: {

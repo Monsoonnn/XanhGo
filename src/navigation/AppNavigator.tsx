@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import * as React from 'react';
+import { createStaticNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
 
 import Storage from '../utils/storage';
-import { getScreens } from './screen';
+import { getScreens } from './screen.tsx';
 
-const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
-  const [firstTime, setFirstTime] = useState<boolean | null>(null);
+  const [firstTime, setFirstTime] = React.useState<boolean | false>(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const checkFirstTime = async () => {
       const value = await Storage.getItem('firstTime');
       if (value === null) {
@@ -32,18 +31,11 @@ export default function AppNavigator() {
 
   if (firstTime === null) return null;
 
-  // Lấy danh sách màn hình (getScreens xử lý firstTime internals)
   const screens = getScreens(firstTime, handleFinishOnboard);
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerTitleAlign: 'center',
-          headerStyle: { backgroundColor: '#F8FAF5' },
-          headerTintColor: '#333',
-        }}
-      >
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         {screens.map(({ name, component, options }) => (
           <Stack.Screen
             key={name}

@@ -18,6 +18,9 @@
 		13F71099456147FFB1EDA75E /* Montserrat-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D08A48AC47604A5E92233E7C /* Montserrat-Medium.ttf */; };
 		856F01A972AF45DDB4D67264 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00156343B3054C40B344A71E /* Montserrat-Regular.ttf */; };
 		8327550862594FA78396ACD1 /* Montserrat-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7FC2008DA4EE4C60837B2011 /* Montserrat-SemiBold.ttf */; };
+		CD1B695685174D6F82318873 /* DelaGothicOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AE8B845DE2D4C559D9270DF /* DelaGothicOne-Regular.ttf */; };
+		C780D092D11B4276A76F201A /* Montserrat-Italic-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0667D158D1C54DC590D7D4E3 /* Montserrat-Italic-VariableFont_wght.ttf */; };
+		E94874C97758440F831F634E /* Montserrat-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C963738FF994C2289A7AB3C /* Montserrat-VariableFont_wght.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,10 +52,16 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = XanhGo/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-XanhGo-XanhGoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XanhGo-XanhGoTests.release.xcconfig"; path = "Target Support Files/Pods-XanhGo-XanhGoTests/Pods-XanhGo-XanhGoTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+<<<<<<< HEAD
 		D4DE07D4547B42978A07929C /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; name = "Montserrat-Bold.ttf"; path = "../src/assets/fonts/Montserrat-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		D08A48AC47604A5E92233E7C /* Montserrat-Medium.ttf */ = {isa = PBXFileReference; name = "Montserrat-Medium.ttf"; path = "../src/assets/fonts/Montserrat-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		00156343B3054C40B344A71E /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; name = "Montserrat-Regular.ttf"; path = "../src/assets/fonts/Montserrat-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		7FC2008DA4EE4C60837B2011 /* Montserrat-SemiBold.ttf */ = {isa = PBXFileReference; name = "Montserrat-SemiBold.ttf"; path = "../src/assets/fonts/Montserrat-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+=======
+		6AE8B845DE2D4C559D9270DF /* DelaGothicOne-Regular.ttf */ = {isa = PBXFileReference; name = "DelaGothicOne-Regular.ttf"; path = "../src/assets/fonts/DelaGothicOne-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0667D158D1C54DC590D7D4E3 /* Montserrat-Italic-VariableFont_wght.ttf */ = {isa = PBXFileReference; name = "Montserrat-Italic-VariableFont_wght.ttf"; path = "../src/assets/fonts/Montserrat-Italic-VariableFont_wght.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2C963738FF994C2289A7AB3C /* Montserrat-VariableFont_wght.ttf */ = {isa = PBXFileReference; name = "Montserrat-VariableFont_wght.ttf"; path = "../src/assets/fonts/Montserrat-VariableFont_wght.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+>>>>>>> main
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,7 +141,11 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+<<<<<<< HEAD
 				868FB9E703E54635BDDC3BFB /* Resources */,
+=======
+				25DB38E1A58A44E286343B37 /* Resources */,
+>>>>>>> main
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -159,6 +172,7 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+<<<<<<< HEAD
 		868FB9E703E54635BDDC3BFB /* Resources */ = {
 			isa = "PBXGroup";
 			children = (
@@ -166,6 +180,14 @@
 				D08A48AC47604A5E92233E7C /* Montserrat-Medium.ttf */,
 				00156343B3054C40B344A71E /* Montserrat-Regular.ttf */,
 				7FC2008DA4EE4C60837B2011 /* Montserrat-SemiBold.ttf */,
+=======
+		25DB38E1A58A44E286343B37 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				6AE8B845DE2D4C559D9270DF /* DelaGothicOne-Regular.ttf */,
+				0667D158D1C54DC590D7D4E3 /* Montserrat-Italic-VariableFont_wght.ttf */,
+				2C963738FF994C2289A7AB3C /* Montserrat-VariableFont_wght.ttf */,
+>>>>>>> main
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -266,10 +288,16 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+<<<<<<< HEAD
 				80679AF9EE944A32839D9B5A /* Montserrat-Bold.ttf in Resources */,
 				13F71099456147FFB1EDA75E /* Montserrat-Medium.ttf in Resources */,
 				856F01A972AF45DDB4D67264 /* Montserrat-Regular.ttf in Resources */,
 				8327550862594FA78396ACD1 /* Montserrat-SemiBold.ttf in Resources */,
+=======
+				CD1B695685174D6F82318873 /* DelaGothicOne-Regular.ttf in Resources */,
+				C780D092D11B4276A76F201A /* Montserrat-Italic-VariableFont_wght.ttf in Resources */,
+				E94874C97758440F831F634E /* Montserrat-VariableFont_wght.ttf in Resources */,
+>>>>>>> main
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

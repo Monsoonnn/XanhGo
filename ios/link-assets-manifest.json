@@ -16,6 +16,18 @@
     {
       "path": "src/assets/fonts/Montserrat-SemiBold.ttf",
       "sha1": "d491c9d0af61faef59ca807737b560170f547f5b"
+    },
+    {
+      "path": "src/assets/fonts/DelaGothicOne-Regular.ttf",
+      "sha1": "aa4fe2ff09693803f5665c6596480f2f911f8540"
+    },
+    {
+      "path": "src/assets/fonts/Montserrat-Italic-VariableFont_wght.ttf",
+      "sha1": "92d0e87485dff4f41184e3ae9497c5d1795c1827"
+    },
+    {
+      "path": "src/assets/fonts/Montserrat-VariableFont_wght.ttf",
+      "sha1": "debd10e57fb07dd24187c41679885129449c1435"
     }
   ]
 }
