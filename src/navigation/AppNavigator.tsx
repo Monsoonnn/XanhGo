@@ -6,11 +6,10 @@ import SplashScreen from 'react-native-splash-screen';
 import Storage from '../utils/storage';
 import Home from '../screens/home';
 import Onboard from '../screens/OnBoarding';
-import OTPScreen from '../screens/OTP';
-import SignUpScreen from '../screens/SignUp';
-import AuthStack from './AuthStack';
-// import Leaderboard from '../screens/Leaderboard';
-// import RewardScreen from '../screens/Reward';
+
+import Leaderboard from '../screens/Leaderboard';
+import RewardScreen from '../screens/Reward';
+
 
 
 export default function AppNavigator() {
@@ -36,27 +35,25 @@ export default function AppNavigator() {
 
   console.log(firstTime);
   const RootStack = createNativeStackNavigator({
-    screens: {
-      Onboard: {
-        screen: (props) => (
-          <Onboard
-            {...props}
-            isFirstTime={firstTime}
-          />
-        ),
-        options: { headerShown: false },
-        initialParams: {
-          isFirstTime: firstTime,
-        },
-      },
-      Home: {
-        screen: Home,
-        options: { headerShown: false },
-      },
-      Auth: {
-        screen: AuthStack,
-        options: { headerShown: false },
-      },
+
+  screens: {
+    Onboard: {
+      screen: Onboard,
+      options: { headerShown: false },
+    },
+    Home: {
+      screen: Home,
+      options: { headerShown: false },
+    },
+    Leaderboard: {
+      screen: Leaderboard,
+      options: { headerShown: false },
+    },
+    Reward: {
+      screen: RewardScreen,
+      options: { headerShown: false },
+    }
+
     },
     config: {
       initialRouteName: firstTime ? 'Onboard' : 'Home',

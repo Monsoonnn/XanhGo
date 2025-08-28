@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   View,
   Text,
@@ -14,6 +13,8 @@ import Microphone from "../../assets/iconsax/microphone.svg";
 
 import { styles } from './styles';
 import BottomBar from '../../components/BottomBar';
+import OfferCard from '../../components/OfferCard';
+import NearbyCard from '../../components/NearbyCard';
 const { width } = Dimensions.get("window");
 const Home = () => {
   return (
@@ -91,67 +92,60 @@ const Home = () => {
         </View>
 
         {/* Promotion Banner */}
-        <View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.offerGrid}
+        >
           <TouchableOpacity style={styles.promotionBanner}>
             <Image
               source={require('../../assets/images/promotion_banner.jpg')}
               style={styles.promotionImage}
             />
           </TouchableOpacity>
-        </View>
+
+          {/* <TouchableOpacity style={styles.promotionBanner}>
+            <Image
+              source={require('../../assets/images/promotion_banner.jpg')}
+              style={styles.promotionImage}
+            />
+          </TouchableOpacity> */}
+        </ScrollView>
+
 
         {/* Offers Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Khuyến mãi</Text>
-          <ScrollView horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.offerGrid} style={styles.offerGrid}>
-            <TouchableOpacity style={styles.offerCard}>
-              <Image
-                source={require('../../assets/images/vouncher_1.jpg')}
-                style={styles.offerImage}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.offerCard}>
-              <Image
-                source={require('../../assets/images/vouncher_2.jpg')}
-                style={styles.offerImage}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.offerCard}>
-              <Image
-                source={require('../../assets/images/vouncher_1.jpg')}
-                style={styles.offerImage}
-              />
-            </TouchableOpacity>
-          </ScrollView>
-        </View>
+        <OfferCard />
 
         {/* Nearby Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Gần đây</Text>
-          <TouchableOpacity style={styles.nearbyCard}>
-            <View style={styles.nearbyImageContainer}>
-              <Icon name="apartment" size={40} color="#FF9800" />
-            </View>
-            <View style={styles.nearbyInfo}>
-              <Text style={styles.nearbyTitle}>Nhà thờ Lớn</Text>
-              <Text style={styles.nearbyAddress}>Hoàn Kiếm, Hà Nội</Text>
-              <View style={styles.nearbyTags}>
-                <View style={styles.tag}>
-                  <Text style={styles.tagText}>Xe máy</Text>
-                </View>
-                <View style={styles.tag}>
-                  <Text style={styles.tagText}>Ô tô</Text>
-                </View>
-              </View>
-            </View>
-            <TouchableOpacity style={styles.favoriteButton}>
-              <Icon name="favorite-border" size={20} color="#999" />
-            </TouchableOpacity>
-          </TouchableOpacity>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.offerGrid}
+          >
+            <NearbyCard
+              image={require('../../assets/images/nhatholon.png')}
+              title="Nhà thờ Lớn"
+              nearbyAddress="Hoàn Kiếm, Hà Nội"
+              nearbyTags={[
+                { type: 'Walk', value: '10P' },
+                { type: 'Bus', value: '32' },
+                { type: 'Train', value: 'A2' },
+              ]}
+            />
+            <NearbyCard
+              image={require('../../assets/images/hoguom.png')}
+              title='Hồ Gươm'
+              nearbyAddress='Hà Nội'
+              nearbyTags={[
+                { type: 'Walk', value: '10P' },
+                { type: 'Bus', value: '32' },
+                { type: 'Train', value: 'A2' },
+              ]}
+            />
+          </ScrollView>
+
         </View>
 
         {/* Challenge Section */}
@@ -184,7 +178,7 @@ const Home = () => {
       </ScrollView>
 
       {/* Bottom Navigation */}
-      <BottomBar />
+      <BottomBar home={true} />
     </View>
   );
 };
