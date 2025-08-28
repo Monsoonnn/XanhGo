@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import Fonts from "../../constants/font";
 
 export const styles = StyleSheet.create({
     backButton: {
@@ -27,8 +28,8 @@ export const styles = StyleSheet.create({
     },
     title: {
         fontSize: 32,
-        fontWeight: 'bold',
         marginBottom: 12,
+        fontFamily: Fonts.DelaGothicOne,
     },
     label: {
         fontSize: 16,

@@ -4,47 +4,67 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SplashScreen from 'react-native-splash-screen';
 
 import Storage from '../utils/storage';
-import { getScreens } from './screen.tsx';
+import Home from '../screens/home';
+import Onboard from '../screens/OnBoarding';
+import OTPScreen from '../screens/OTP';
+import SignUpScreen from '../screens/SignUp';
+import AuthStack from './AuthStack';
+// import Leaderboard from '../screens/Leaderboard';
+// import RewardScreen from '../screens/Reward';
 
 
 export default function AppNavigator() {
-  const [firstTime, setFirstTime] = React.useState<boolean | false>(false);
+  const [firstTime, setFirstTime] = React.useState<boolean | null>(false);
 
   React.useEffect(() => {
     const checkFirstTime = async () => {
       const value = await Storage.getItem('firstTime');
-      if (value === null) {
+      console.log(value);
+      if (value == false || value === null) {
+        await Storage.setItem('firstTime', true);
         setFirstTime(true);
       } else {
-        setFirstTime(false);
+        await Storage.setItem('firstTime', false);
+        setFirstTime(true);
       }
+
     };
 
     checkFirstTime();
     SplashScreen.hide();
   }, []);
 
-  const handleFinishOnboard = async () => {
-    await Storage.setItem('firstTime', false);
-    setFirstTime(false);
-  };
-
-  if (firstTime === null) return null;
-
-  const screens = getScreens(firstTime, handleFinishOnboard);
-
-  return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {screens.map(({ name, component, options }) => (
-          <Stack.Screen
-            key={name}
-            name={name}
-            component={component}
-            options={options}
+  console.log(firstTime);
+  const RootStack = createNativeStackNavigator({
+    screens: {
+      Onboard: {
+        screen: (props) => (
+          <Onboard
+            {...props}
+            isFirstTime={firstTime}
           />
-        ))}
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+        ),
+        options: { headerShown: false },
+        initialParams: {
+          isFirstTime: firstTime,
+        },
+      },
+      Home: {
+        screen: Home,
+        options: { headerShown: false },
+      },
+      Auth: {
+        screen: AuthStack,
+        options: { headerShown: false },
+      },
+    },
+    config: {
+      initialRouteName: firstTime ? 'Onboard' : 'Home',
+    },
+  });
+
+
+  const Navigation = createStaticNavigation(RootStack);
+
+  return <Navigation />;
 }

@@ -1,6 +1,6 @@
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-import  {useState} from 'react';
+import { useState } from 'react';
 import { Dimensions } from "react-native";
 import Storage from '../../utils/storage';
 import { useNavigation } from '@react-navigation/native';
@@ -9,6 +9,7 @@ import Fonts from '../../constants/font';
 
 type OnboardProps = {
   onFinish: () => void;
+  isFirstTime: any;
 };
 
 const { width } = Dimensions.get("window");
@@ -18,13 +19,13 @@ const steps = [
     image: require('../../assets/onboard/rabbit_1.png'),
     title: 'Giảm Carbon!',
     description: 'Sử dụng phương tiện công cộng giúp \n giảm ô nhiễm, bảo vệ môi trường.',
-   
+
   },
   {
     image: require('../../assets/onboard/human_1.png'),
     title: 'Chạm là đi',
     description: 'Dùng thẻ XanhGo hoặc ví điện tử để quét mã, lên xe ngay!',
-    
+
   },
   {
     image: require('../../assets/onboard/human_2.png'),
@@ -42,13 +43,14 @@ const steps = [
 
 
 
-export default function Onboard({onFinish}: OnboardProps): React.JSX.Element {
+export default function Onboard({ onFinish, isFirstTime }: OnboardProps): React.JSX.Element {
   const [step, setStep] = useState(0);
   const navigation = useNavigation<any>();
 
   const handleFinishOnboard = async () => {
-    await Storage.setItem('firstTime', true);
-    navigation.navigate('Home');
+    console.log(isFirstTime)
+    if (isFirstTime) navigation.navigate('Auth');
+    else navigation.navigate('Home');
   };
 
   const nextStep = () => {
@@ -59,11 +61,11 @@ export default function Onboard({onFinish}: OnboardProps): React.JSX.Element {
     }
   };
 
-  
+
 
   return (
     <View style={styles.container}>
-      <Image source={steps[step].image}  style={steps[step].imageStyle || {}}  />
+      <Image source={steps[step].image} style={steps[step].imageStyle || {}} />
 
       <Text style={styles.title}>{steps[step].title}</Text>
 
@@ -83,12 +85,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
-//   image: {
-//     width: 200,
-//     height: 200,
-//     resizeMode: 'contain',
-//     marginBottom: 20,
-//   },
+  //   image: {
+  //     width: 200,
+  //     height: 200,
+  //     resizeMode: 'contain',
+  //     marginBottom: 20,
+  //   },
   title: {
     fontFamily: Fonts.DelaGothicOne,
     fontSize: 36,
@@ -98,7 +100,7 @@ const styles = StyleSheet.create({
   description: {
     fontFamily: Fonts.Montserrat.Regular,
     fontSize: 18,
-    textAlign: 'center',  
+    textAlign: 'center',
     marginBottom: 20,
   },
   roundButton: {
