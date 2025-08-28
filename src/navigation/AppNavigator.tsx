@@ -6,29 +6,36 @@ import SplashScreen from 'react-native-splash-screen';
 import Storage from '../utils/storage';
 import Home from '../screens/home';
 import Onboard from '../screens/OnBoarding';
+
 import Leaderboard from '../screens/Leaderboard';
 import RewardScreen from '../screens/Reward';
 
 
+
 export default function AppNavigator() {
-  const [firstTime, setFirstTime] = React.useState<boolean | false>(false);
+  const [firstTime, setFirstTime] = React.useState<boolean | null>(false);
 
   React.useEffect(() => {
     const checkFirstTime = async () => {
       const value = await Storage.getItem('firstTime');
-      if (value === null) {
+      console.log(value);
+      if (value == false || value === null) {
+        await Storage.setItem('firstTime', true);
         setFirstTime(true);
       } else {
-        setFirstTime(false);
+        await Storage.setItem('firstTime', false);
+        setFirstTime(true);
       }
+
     };
 
     checkFirstTime();
     SplashScreen.hide();
   }, []);
 
-
+  console.log(firstTime);
   const RootStack = createNativeStackNavigator({
+
   screens: {
     Onboard: {
       screen: Onboard,

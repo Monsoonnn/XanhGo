@@ -103,6 +103,7 @@ const Home = () => {
               style={styles.promotionImage}
             />
           </TouchableOpacity>
+
           {/* <TouchableOpacity style={styles.promotionBanner}>
             <Image
               source={require('../../assets/images/promotion_banner.jpg')}
@@ -110,6 +111,7 @@ const Home = () => {
             />
           </TouchableOpacity> */}
         </ScrollView>
+
 
         {/* Offers Section */}
         <OfferCard />
