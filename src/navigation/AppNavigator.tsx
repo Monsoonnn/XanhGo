@@ -12,6 +12,7 @@ import RewardScreen from '../screens/Reward';
 import AuthStack from './AuthStack';
 import { User } from 'iconsax-react-native';
 import UserSettings from './UserSettings';
+import MapNavigation from './MapNavigation';
 
 
 
@@ -69,6 +70,10 @@ export default function AppNavigator() {
       },
       UserSettings: {
         screen: UserSettings,
+        options: { headerShown: false },
+      },
+      GoogleMap: {
+        screen: MapNavigation,
         options: { headerShown: false },
       }
     },
