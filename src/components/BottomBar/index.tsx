@@ -39,7 +39,7 @@ const BottomBar = ({ home, profile, tree, leaderboard }: Props) => {
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.navItem} onPress={() => {
-       // navigation.navigate('Leaderboard');
+       navigation.navigate('UserSettings');
 
       }}  >
         <Profile size={24} color={profile ? "#4CAF50" : "#999"} />

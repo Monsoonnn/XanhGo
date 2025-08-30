@@ -48,8 +48,8 @@ export default function Onboard({ onFinish, isFirstTime }: OnboardProps): React.
   const navigation = useNavigation<any>();
 
   const handleFinishOnboard = async () => {
-    console.log(isFirstTime)
-    if (isFirstTime) navigation.navigate('Auth');
+    console.log("Onboard" + isFirstTime)
+    if (!isFirstTime) navigation.navigate('Auth');
     else navigation.navigate('Home');
   };
 
