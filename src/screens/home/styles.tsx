@@ -156,7 +156,6 @@ export const styles = StyleSheet.create({
     fontFamily: Fonts.DelaGothicOne,
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
     marginTop: 4,
   },
   addIcon: {

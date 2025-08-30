@@ -9,6 +9,9 @@ import Onboard from '../screens/OnBoarding';
 
 import Leaderboard from '../screens/Leaderboard';
 import RewardScreen from '../screens/Reward';
+import AuthStack from './AuthStack';
+import { User } from 'iconsax-react-native';
+import UserSettings from './UserSettings';
 
 
 
@@ -18,42 +21,56 @@ export default function AppNavigator() {
   React.useEffect(() => {
     const checkFirstTime = async () => {
       const value = await Storage.getItem('firstTime');
-      console.log(value);
-      if (value == false || value === null) {
-        await Storage.setItem('firstTime', true);
-        setFirstTime(true);
-      } else {
-        await Storage.setItem('firstTime', false);
-        setFirstTime(true);
-      }
+      console.log("Stored value:", value);
 
+      if (value === null) {
+
+        await Storage.setItem('firstTime', false); 
+        setFirstTime(true); 
+      } else {
+        setFirstTime(false); 
+      }
     };
 
     checkFirstTime();
     SplashScreen.hide();
   }, []);
 
-  console.log(firstTime);
+
+  // console.log(firstTime);
   const RootStack = createNativeStackNavigator({
 
-  screens: {
-    Onboard: {
-      screen: Onboard,
-      options: { headerShown: false },
-    },
-    Home: {
-      screen: Home,
-      options: { headerShown: false },
-    },
-    Leaderboard: {
-      screen: Leaderboard,
-      options: { headerShown: false },
-    },
-    Reward: {
-      screen: RewardScreen,
-      options: { headerShown: false },
-    }
-
+    screens: {
+      Onboard: {
+        screen: (props) => (
+          <Onboard
+            {...props}
+            isFirstTime={firstTime}
+          // onFinish={() => console.log("Finish")}
+          />
+        ),
+        options: { headerShown: false },
+      },
+      Home: {
+        screen: Home,
+        options: { headerShown: false },
+      },
+      Leaderboard: {
+        screen: Leaderboard,
+        options: { headerShown: false },
+      },
+      Reward: {
+        screen: RewardScreen,
+        options: { headerShown: false },
+      },
+      Auth: {
+        screen: AuthStack,
+        options: { headerShown: false },
+      },
+      UserSettings: {
+        screen: UserSettings,
+        options: { headerShown: false },
+      }
     },
     config: {
       initialRouteName: firstTime ? 'Onboard' : 'Home',
