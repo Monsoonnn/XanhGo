@@ -60,12 +60,12 @@ const Home = () => {
         {/* Search Bar */}
         <View style={styles.searchContainer}>
           <TouchableOpacity style={styles.searchBar} onPressOut={() => { 
-              navigation.navigate('GoogleMap');
+              navigation.navigate('Map');
           }}>
             <Text style={styles.searchPlaceholder}>Nhập nơi đến</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.locationButton} onPressOut={() => { 
-              navigation.navigate('GoogleMap');
+              navigation.navigate('Map');
           }}>
             <Microphone width={25} height={25} />
           </TouchableOpacity>

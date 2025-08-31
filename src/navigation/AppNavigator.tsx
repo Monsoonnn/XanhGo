@@ -72,7 +72,7 @@ export default function AppNavigator() {
         screen: UserSettings,
         options: { headerShown: false },
       },
-      GoogleMap: {
+      Map: {
         screen: MapNavigation,
         options: { headerShown: false },
       }

@@ -72,8 +72,8 @@ export const styles = StyleSheet.create({
   
   // Mapbox Markers
   startMarker: {
-    width: 32,
-    height: 32,
+    width: 50,
+    height: 50,
     backgroundColor: '#4CAF50',
     borderRadius: 16,
     justifyContent: 'center',
@@ -83,8 +83,8 @@ export const styles = StyleSheet.create({
   },
   
   endMarker: {
-    width: 32,
-    height: 32,
+    width: 50,
+    height: 50,
     backgroundColor: '#F44336',
     borderRadius: 16,
     justifyContent: 'center',

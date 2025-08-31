@@ -7,7 +7,6 @@ import 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-// Di chuyển enableScreens ra ngoài
 enableScreens();
 
 function AppContent(): React.JSX.Element {
