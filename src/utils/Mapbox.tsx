@@ -3,6 +3,7 @@ export interface Location {
   latitude: number;
   longitude: number;
   address?: string;
+  name?: string;
 }
 
 export interface Stop {
@@ -17,7 +18,7 @@ export interface Station {
   longitude: number;
 }
 
-export type SegmentType = "walking" | "bus" | "train";
+export type SegmentType = "walking" | "bus" | "train" | "bicycle";
 
 export interface Segment {
   id: number;
@@ -49,15 +50,50 @@ export interface Route {
 export const getTransportStyle = (type: SegmentType) => {
   switch (type) {
     case 'walking':
-      return { color: '#4CAF50', icon: 'directions-walk', strokeWidth: 4 };
+      return { color: '#EFEAD6', icon: 'directions-walk', strokeWidth: 4 };
     case 'bus':
-      return { color: '#81C784', icon: 'directions-bus', strokeWidth: 5 };
+      return { color: '#BEDEAB', icon: 'directions-bus', strokeWidth: 5 };
     case 'train':
-      return { color: '#E91E63', icon: 'tram', strokeWidth: 6 };
+      return { color: '#F6B9D4', icon: 'tram', strokeWidth: 6 };
+    case 'bicycle':
+      return { color: '#29B26B', icon: 'directions-bike', strokeWidth: 4 };
     default:
       return { color: '#2196F3', icon: 'directions', strokeWidth: 4 };
   }
 };
+
+
+export const getTransportIcon = (type: string) => {
+  switch (type) {
+    case "bus":
+      return require("../assets/icons/bus.png");
+    case "walking":
+      return require("../assets/icons/walk.png");
+    case "train":
+      return require("../assets/icons/tram.png");
+    case "bicycle":
+      return require("../assets/icons/bicycle.png");
+    default:
+      // return require("../assets/icons/default.png");
+  }
+};
+
+export const getNavigationIcon = (type: string) => {
+  switch (type) {
+    case "bus":
+      return require("../assets/navigationIcon/bus.png");
+    case "walking":
+      return require("../assets/navigationIcon/walk.png");
+    case "train":
+      return require("../assets/navigationIcon/tram.png");
+    case "bicycle":
+      return require("../assets/navigationIcon/bicycle.png");
+    default:
+      return require("../assets/navigationIcon/default.png");
+      // return require("../assets/icons/default.png");
+  }
+};
+
 
 // Format duration in minutes to readable string
 export const formatDuration = (minutes: number): string => {
@@ -67,6 +103,30 @@ export const formatDuration = (minutes: number): string => {
   return `${h}h ${m}p`;
 };
 
+export function formatDistance(distance: number): string {
+  if (distance < 1000) {
+    return `${distance.toFixed(0)} m`;
+  } else if (distance < 1000000) {
+    return `${(distance / 1000).toFixed(1)} km`;
+  } else {
+    return `${(distance / 1000000).toFixed(1)} Mm`; 
+  }
+}
+
+export const getTimeRangeString = (minutes: number): string => {
+  const now = new Date();
+  const future = new Date(now.getTime() + minutes * 60000);
+
+  const format = (date: Date) => {
+    const hours = date.getHours().toString().padStart(2, "0");
+    const mins = date.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${mins}`;
+  };
+
+  return `${format(now)} - ${format(future)}`;
+};
+
+
 // Format price to Vietnamese currency
 export const formatPrice = (price: number): string => {
   return new Intl.NumberFormat('vi-VN', {
@@ -74,6 +134,8 @@ export const formatPrice = (price: number): string => {
     currency: 'VND'
   }).format(price);
 };
+
+
 
 // Calculate bounds from coordinates array
 export const getBounds = (coordinates: number[][]) => {
@@ -204,7 +266,7 @@ const getRandomBusLine = (): string => {
 
 // Generate random train line
 const getRandomTrainLine = (): string => {
-  const trainLines = ['2A', '3', '4'];
+  const trainLines = ['2A', '3'];
   return trainLines[Math.floor(Math.random() * trainLines.length)];
 };
 
@@ -213,9 +275,9 @@ const generateInstruction = (type: SegmentType, busLine?: string, trainLine?: st
   switch (type) {
     case 'walking':
       const walkInstructions = [
-        'Đi bộ theo đường gợi ý',
-        'Di chuyển bằng cách đi bộ',
-        'Đi bộ đến điểm tiếp theo',
+        'Đi bộ theo chỉ dẫn',
+        'Tiếp tục di chuyển',
+        'Đi bộ tới điểm kế tiếp',
         'Tiếp tục đi bộ'
       ];
       return walkInstructions[Math.floor(Math.random() * walkInstructions.length)];
@@ -419,4 +481,44 @@ export const generateRandomSegments = (
   const finalSegments = ensureAllTransportTypes(segments);
   
   return finalSegments;
+};
+
+
+// Bảng phát thải CO2 (gram/km) cho từng loại phương tiện
+const CO2_EMISSION: Record<SegmentType, number> = {
+  walking: 0,   // đi bộ = 0g/km
+  bus: 20,      // xe buýt điện = 20g/km
+  train: 15,     // tàu điện = 15g/km (trung bình 14-20)
+  bicycle: 0,   // đi xe đạp = 0g/km
+};
+
+// Chuẩn xe máy = 50g/km. 5g CO2 = 1 điểm Xanh
+export const calculateGreenPoints = (segment: Segment): number => {
+  const baseline = 50; // xe máy phát thải chuẩn
+  const emission = CO2_EMISSION[segment.type] ?? baseline;
+  const saved = baseline - emission; // số gram tiết kiệm / km
+  const pointsPerKm = saved / 5; // 5g = 1 điểm
+  return Math.max(0, Math.round(pointsPerKm * segment.distance)); // nhân với số km
+};
+
+// Tính tổng Điểm Xanh cho cả tuyến đường
+export const calculateRouteGreenPoints = (route: Route): number => {
+  return route.segments.reduce((total, seg) => total + calculateGreenPoints(seg), 0);
+};
+
+const emissionFactors: Record<string, number> = {
+  walking: 0,
+  bicycle: 0,
+  bus: 105,
+  tram: 41,
+  train: 41,
+  car: 192,
+};
+
+export const calculateTotalEmission = (route: Route): number => {
+  return route.segments.reduce((total, seg) => {
+    const factor = emissionFactors[seg.type] ?? 0;
+    const km = seg.distance / 1000;
+    return Math.round(total + factor * km);
+  }, 0);
 };

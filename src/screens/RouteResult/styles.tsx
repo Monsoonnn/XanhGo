@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native';
+import Fonts from '../../constants/font';
 
 const { width, height } = Dimensions.get('window');
 
@@ -9,11 +10,6 @@ export const styles = StyleSheet.create({
     margin: 16,
     borderRadius: 12,
     overflow: 'hidden',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
   },
 
   mapPreview: {
@@ -35,11 +31,11 @@ export const styles = StyleSheet.create({
   // Routes Selection Container
   routesSelectionContainer: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    // backgroundColor: 'f',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    paddingTop: 20,
     paddingHorizontal: 16,
+    backgroundColor: '#fff',
   },
 
   routesSelectionTitle: {
@@ -51,21 +47,16 @@ export const styles = StyleSheet.create({
   },
 
   routesScrollView: {
-    flex: 1,
     marginBottom: 20,
   },
 
   // Route Selection Card
   routeSelectionCard: {
-    backgroundColor: '#fff',
+    backgroundColor: '#FAFDF3',
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    
     borderWidth: 2,
     borderColor: 'transparent',
   },
@@ -111,26 +102,42 @@ export const styles = StyleSheet.create({
     marginRight: 16,
     marginBottom: 4,
   },
-
+  routeCardTimeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   routeCardTime: {
-    fontSize: 14,
-    color: '#333',
-    fontWeight: '500',
-    marginLeft: 4,
+    fontSize: 16,
+    fontFamily: Fonts.Montserrat.SemiBold
   },
 
   routeCardDistance: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: 16,
     marginLeft: 4,
+    fontFamily: Fonts.DelaGothicOne
   },
 
   routeCardPrice: {
     fontSize: 14,
-    color: '#666',
-    marginLeft: 4,
+    fontFamily: Fonts.Montserrat.Regular,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E5E5E5',
   },
-
+  routeCardEmmision: {
+    fontSize: 10,
+    fontFamily: Fonts.Montserrat.Regular,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    backgroundColor: '#29B26B',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E5E5E5',
+    color: '#fff'
+  },
   routeCardTransports: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -154,6 +161,9 @@ export const styles = StyleSheet.create({
 
   selectedIndicator: {
     marginLeft: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 5
   },
 
   // Route Card Details
@@ -197,16 +207,11 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 16,
     borderRadius: 12,
-    elevation: 3,
-    shadowColor: '#4CAF50',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
+
   },
 
   disabledButton: {
     backgroundColor: '#ccc',
-    shadowColor: '#ccc',
   },
 
   startNavigationText: {
@@ -217,9 +222,47 @@ export const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    paddingTop: 35,
     backgroundColor: '#fff',
   },
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+    paddingLeft: 13,
 
+  },
+  currentLocationDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#D4D4D4',
+    marginRight: 16,
+  },
+  locationContainer: {
+    margin: 12, 
+    marginBottom: 0,
+    backgroundColor: '#fff',
+  },
+  currentLocationButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 32,
+    borderWidth: 1,
+    borderColor: '#D4D4D4',
+
+  },
+  currentLocationText: {
+    fontSize: 14,
+    fontFamily: Fonts.Montserrat.Regular,
+    // color: '#4CAF50',
+    fontWeight: '500',
+    flex: 1,
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -240,31 +283,24 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     backgroundColor: '#fff',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
   },
 
   backButton: {
     padding: 8,
     borderRadius: 8,
-    backgroundColor: '#f5f5f5',
+    marginLeft: -5,
   },
 
   headerTitle: {
-    flex: 1,
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
+    fontSize: 24,
+    fontFamily: Fonts.DelaGothicOne,
     textAlign: 'center',
+    marginLeft: -25,
   },
 
   refreshButton: {
     padding: 8,
     borderRadius: 8,
-    backgroundColor: '#f5f5f5',
   },
 
   startMarker: {
@@ -316,9 +352,6 @@ export const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     elevation: 3,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
   },
 
   transferMarker: {

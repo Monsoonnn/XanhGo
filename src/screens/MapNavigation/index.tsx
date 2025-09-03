@@ -20,39 +20,54 @@ import {
   formatDuration,
   formatPrice,
   getBounds,
-  generateRandomSegments
+  generateRandomSegments,
+  getTransportIcon
 } from '../../utils/Mapbox.tsx';
 import { fetchFakeRoutesFromServer, MAPBOX_ACCESS_TOKEN } from '../../utils/APIMapBox.tsx';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/MapNavigation.tsx';
+import { ArrowLeft2 } from 'iconsax-react-native';
+import { BottomSheetRef } from '../../components/BottomSheet/index.tsx';
+import NavigationBottomSheet from '../../components/RouteDetails/index.tsx';
+import { Image } from 'react-native';
+import SuccesModel from '../../components/SucccesModel/index.tsx';
+import Fonts from '../../constants/font.js';
+
 
 // Cấu hình Mapbox Access Token
 MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN);
 
-type MultiStageRoutingRouteProp = RouteProp<RootStackParamList, "MultiStageRouting">;
+type MultiStageRoutingRouteProp = RouteProp<RootStackParamList, "MapNavigation">;
 
-const MultiStageRouting: React.FC = () => {
+const MapNavigation: React.FC = () => {
   const mapRef = useRef<MapboxGL.MapView>(null);
   const cameraRef = useRef<MapboxGL.Camera>(null);
+  const navigationBottomSheetRef = useRef<BottomSheetRef>(null);
+
   const [routes, setRoutes] = useState<Route[]>([]);
   const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [userLocation, setUserLocation] = useState<[number, number]>([0, 0]);
-  
+  const [navigationStatus, setNavigationStatus] = useState<"idle" | "navigating" | "done">("idle");
+  const [currentSegmentIndex, setCurrentSegmentIndex] = useState<number>(0);
+  const [visibleModel, setVisibleModel] = useState<boolean>(false);
+
+
   const { params } = useRoute<MultiStageRoutingRouteProp>();
   const { startPoint, endPoint, selectedRouteProps: passedRoute } = params;
   const navigation = useNavigation<any>();
 
+
   useEffect(() => {
     const loadRoutes = async () => {
       setLoading(true);
-      
+
       if (passedRoute) {
         setRoutes([passedRoute]);
         setSelectedRoute(passedRoute);
         setUserLocation([startPoint.longitude, startPoint.latitude]);
-        
-        // Auto zoom to selected route
+
+        // Auto zoom to selected route and open bottom sheet
         if (passedRoute.segments.length > 0) {
           setTimeout(() => {
             const allCoordinates = passedRoute.segments.flatMap((seg: Segment) => seg.coordinates);
@@ -70,21 +85,25 @@ const MultiStageRouting: React.FC = () => {
                 animationDuration: 1000,
               });
             }
+            // Open navigation bottom sheet
+            setTimeout(() => {
+              navigationBottomSheetRef.current?.open();
+            }, 1000);
           }, 500);
         }
       } else {
         // Fallback: load routes fake nếu không có selectedRoute
-        const result = await fetchFakeRoutesFromServer(startPoint, endPoint);
-        if (result) {
-          setRoutes(result);
-          setSelectedRoute(result[0]);
-          setUserLocation([startPoint.longitude, startPoint.latitude]);
-        }
+        // const result = await fetchFakeRoutesFromServer(startPoint, endPoint);
+        // if (result) {
+        //   setRoutes(result);
+        //   setSelectedRoute(result[0]);
+        //   setUserLocation([startPoint.longitude, startPoint.latitude]);
+        // }
       }
-      
+
       setLoading(false);
     };
-    
+
     loadRoutes();
   }, [passedRoute, startPoint, endPoint]);
 
@@ -109,60 +128,29 @@ const MultiStageRouting: React.FC = () => {
     }
   };
 
-  const startNavigation = () => {
+  const handleStartNavigation = () => {
     if (selectedRoute) {
-      Alert.alert(
-        'Bắt đầu điều hướng',
-        `Tuyến đường ${selectedRoute.segments.length} chặng\nThời gian: ${formatDuration(selectedRoute.totalDuration)}\nChi phí: ${formatPrice(selectedRoute.totalPrice)}`,
-        [
-          { text: 'Hủy', style: 'cancel' },
-          { text: 'Bắt đầu', onPress: () => console.log('Start navigation') }
-        ]
-      );
+      if (navigationStatus === "navigating") {
+        // Stop navigation
+        setNavigationStatus('done');
+        setCurrentSegmentIndex(0);
+        console.log('Navigation stopped');
+      } else {
+        // Start navigation
+        setNavigationStatus('navigating');
+        setCurrentSegmentIndex(0); // Start with first segment
+
+        // Zoom to first segment
+        if (selectedRoute.segments.length > 0) {
+          const firstSegment = selectedRoute.segments[0];
+          cameraRef.current?.setCamera({
+            centerCoordinate: [firstSegment.startLocation.longitude, firstSegment.startLocation.latitude],
+            zoomLevel: 16,
+            animationDuration: 1000
+          });
+        }
+      }
     }
-  };
-
-  const renderSegmentDetails = (segment: Segment, index: number) => {
-    const style = getTransportStyle(segment.type);
-
-    return (
-      <View key={segment.id} style={styles.segmentItem}>
-        <View style={styles.segmentHeader}>
-          <View style={styles.segmentIconContainer}>
-            <View style={[styles.segmentIconBg, { backgroundColor: style.color }]}>
-              <Icon name={style.icon} size={20} color="#fff" />
-            </View>
-            <Text style={styles.segmentIndex}>{index + 1}</Text>
-          </View>
-          <View style={styles.segmentInfo}>
-            <Text style={styles.segmentInstruction}>{segment.instruction}</Text>
-            <View style={styles.segmentMeta}>
-              <Text style={styles.segmentDuration}>
-                {formatDuration(segment.duration)}
-              </Text>
-              <Text style={styles.segmentDistance}>
-                • {segment.distance} km
-              </Text>
-              {segment.price && segment.price > 0 && (
-                <Text style={styles.segmentPrice}>
-                  • {formatPrice(segment.price)}
-                </Text>
-              )}
-            </View>
-            {segment.busLine && (
-              <Text style={styles.segmentLine}>
-                Tuyến {segment.busLine}
-              </Text>
-            )}
-            {segment.trainLine && (
-              <Text style={styles.segmentLine}>
-                Metro Line {segment.trainLine}
-              </Text>
-            )}
-          </View>
-        </View>
-      </View>
-    );
   };
 
   const onUserLocationUpdate = (location: MapboxGL.Location) => {
@@ -171,7 +159,6 @@ const MultiStageRouting: React.FC = () => {
     }
   };
 
-  // Xác định header title dựa trên việc có passedRoute hay không
   const headerTitle = passedRoute ? 'Điều hướng' : 'Tuyến đường đa chặng';
 
   if (loading) {
@@ -184,34 +171,34 @@ const MultiStageRouting: React.FC = () => {
       </SafeAreaView>
     );
   }
-  
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Icon name="arrow-back" size={24} color="#000" />
+          <ArrowLeft2 size={24} color="#000" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{headerTitle}</Text>
-        {/* Chỉ hiển thị refresh button khi không có passedRoute */}
-        {!passedRoute && (
+
+        {/* Chỉ hiển thị refresh button khi không có passedRoute và không đang navigation */}
+        {/* {!passedRoute && !isNavigating && (
           <TouchableOpacity
             style={styles.refreshButton}
             onPress={async () => {
               const newRoutes = await fetchFakeRoutesFromServer(startPoint, endPoint);
               if (newRoutes) {
-                setRoutes(newRoutes); 
+                setRoutes(newRoutes);
               }
             }}
           >
             <Icon name="refresh" size={24} color="#000" />
           </TouchableOpacity>
-        )}
-        {/* Nếu có passedRoute, để trống để header cân đối */}
-        {passedRoute && <View style={styles.refreshButton} />}
+        )} */}
+        {/* Nếu có passedRoute hoặc đang navigation, để trống để header cân đối */}
+        {/* {(passedRoute || isNavigating) && <View style={styles.refreshButton} />} */}
       </View>
 
       {/* Map */}
@@ -220,6 +207,8 @@ const MultiStageRouting: React.FC = () => {
           ref={mapRef}
           style={styles.map}
           styleURL={MapboxGL.StyleURL.Street}
+          logoEnabled={false}
+          compassEnabled={true}
         >
           <MapboxGL.Camera
             ref={cameraRef}
@@ -236,6 +225,7 @@ const MultiStageRouting: React.FC = () => {
 
           {selectedRoute && selectedRoute.segments.map((segment, segmentIndex) => {
             const style = getTransportStyle(segment.type);
+            const isCurrentSegment = navigationStatus === 'navigating' && segmentIndex === currentSegmentIndex;
 
             return (
               <React.Fragment key={segment.id}>
@@ -255,7 +245,7 @@ const MultiStageRouting: React.FC = () => {
                     id={`route-line-${segment.id}`}
                     style={{
                       lineColor: style.color,
-                      lineWidth: style.strokeWidth,
+                      lineWidth: isCurrentSegment ? style.strokeWidth + 2 : style.strokeWidth,
                       lineDasharray: segment.type === 'walking' ? [2, 2] : undefined,
                       lineCap: 'round',
                       lineJoin: 'round'
@@ -295,29 +285,32 @@ const MultiStageRouting: React.FC = () => {
                     id={`transfer-${segmentIndex}`}
                     coordinate={[segment.endLocation.longitude, segment.endLocation.latitude]}
                   >
-                    <View style={[styles.transferMarker, { backgroundColor: style.color }]}>
-                      <Icon name={style.icon} size={16} color="#fff" />
+                    <View style={[
+                      styles.transferMarker,
+                      { backgroundColor: isCurrentSegment ? '#FF5722' : style.color }
+                    ]}>
+                      <Image source={getTransportIcon(segment.type)} style={{ width: 28, height: 28 }} />
                     </View>
                     <MapboxGL.Callout title={`Điểm chuyển tiếp ${segmentIndex + 1}`} />
                   </MapboxGL.PointAnnotation>
                 )}
 
                 {/* Bus stops */}
-                {segment.stops && segment.stops.map((stop, stopIndex) => (
+                {/* {segment.stops && segment.stops.map((stop, stopIndex) => (
                   <MapboxGL.PointAnnotation
                     key={`stop-${stopIndex}`}
                     id={`bus-stop-${segment.id}-${stopIndex}`}
                     coordinate={[stop.longitude, stop.latitude]}
                   >
                     <View style={styles.busStopMarker}>
-                      <Icon name="directions-bus" size={12} color="#fff" />
+                      <Image source={getTransportIcon(segment.type)} />
                     </View>
                     <MapboxGL.Callout title={stop.name} />
                   </MapboxGL.PointAnnotation>
-                ))}
+                ))} */}
 
                 {/* Train stations */}
-                {segment.stations && segment.stations.map((station, stationIndex) => (
+                {/* {segment.stations && segment.stations.map((station, stationIndex) => (
                   <MapboxGL.PointAnnotation
                     key={`station-${stationIndex}`}
                     id={`train-station-${segment.id}-${stationIndex}`}
@@ -328,7 +321,7 @@ const MultiStageRouting: React.FC = () => {
                     </View>
                     <MapboxGL.Callout title={station.name} />
                   </MapboxGL.PointAnnotation>
-                ))}
+                ))} */}
               </React.Fragment>
             );
           })}
@@ -347,84 +340,101 @@ const MultiStageRouting: React.FC = () => {
         >
           <Icon name="my-location" size={24} color="#666" />
         </TouchableOpacity>
-      </View>
 
-      {/* Routes List - Chỉ hiển thị khi không có passedRoute hoặc có nhiều routes */}
-      <View style={styles.routesContainer}>
-        {!passedRoute && (
-          <>
-            <Text style={styles.routesTitle}>Các tuyến đường gợi ý</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {routes.map((route) => (
-                <TouchableOpacity
-                  key={route.id}
-                  style={[
-                    styles.routeCard,
-                    selectedRoute?.id === route.id && styles.selectedRouteCard
-                  ]}
-                  onPress={() => selectRoute(route)}
-                >
-                  <View style={styles.routeHeader}>
-                    <Text style={styles.routeDuration}>
-                      {formatDuration(route.totalDuration)}
-                    </Text>
-                    <Text style={styles.routePrice}>
-                      {formatPrice(route.totalPrice)}
-                    </Text>
-                  </View>
-
-                  <View style={styles.routeIcons}>
-                    {route.segments.map((segment, index) => {
-                      const style = getTransportStyle(segment.type);
-                      return (
-                        <React.Fragment key={segment.id}>
-                          <View style={[styles.miniIcon, { backgroundColor: style.color }]}>
-                            <Icon name={style.icon} size={12} color="#fff" />
-                          </View>
-                          {index < route.segments.length - 1 && (
-                            <Icon name="arrow-forward" size={12} color="#ccc" />
-                          )}
-                        </React.Fragment>
-                      );
-                    })}
-                  </View>
-
-                  <Text style={styles.routeDistance}>
-                    {route.totalDistance} km • {route.segments.length} chặng
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </>
-        )}
-
-        {/* Selected Route Details */}
+        {/* Routes Toggle Button - Show when there's a selected route */}
         {selectedRoute && (
-          <View style={styles.routeDetails}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <Text style={styles.detailsTitle}>
-                {passedRoute ? 'Hướng dẫn chi tiết' : 'Chi tiết tuyến đường'}
-              </Text>
-              {selectedRoute.segments.map((segment, index) =>
-                renderSegmentDetails(segment, index)
-              )}
-            </ScrollView>
-          </View>
+          <TouchableOpacity
+            style={[
+              styles.routesToggleButton,
+              navigationStatus === 'navigating' && styles.navigationToggleButton
+            ]}
+            onPress={() => navigationBottomSheetRef.current?.open()}
+          >
+            <Icon
+              name={navigationStatus === 'navigating' ? "navigation" : "list"}
+              size={24}
+              color="#fff"
+            />
+            <Text style={styles.routesToggleText}>
+              {navigationStatus === 'navigating' ? 'Xem điều hướng' : (passedRoute ? 'Xem hướng dẫn' : 'Xem tuyến đường')}
+            </Text>
+          </TouchableOpacity>
         )}
-
-        {/* Navigation Button */}
-        <TouchableOpacity
-          style={styles.navigationButton}
-          onPress={startNavigation}
-        >
-          <Icon name="navigation" size={24} color="#fff" />
-          <Text style={styles.navigationText}>
-            {passedRoute ? 'Bắt đầu điều hướng' : 'Bắt đầu điều hướng'}
-          </Text>
-        </TouchableOpacity>
       </View>
+
+      {/* Routes List - Only show when not navigating and no passedRoute */}
+      {!passedRoute && navigationStatus === 'idle' && (
+        <View style={styles.routesContainer}>
+          <Text style={styles.routesTitle}>Các tuyến đường gợi ý</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {routes.map((route) => (
+              <TouchableOpacity
+                key={route.id}
+                style={[
+                  styles.routeCard,
+                  selectedRoute?.id === route.id && styles.selectedRouteCard
+                ]}
+                onPress={() => selectRoute(route)}
+              >
+                <View style={styles.routeHeader}>
+                  <Text style={styles.routeDuration}>
+                    {formatDuration(route.totalDuration)}
+                  </Text>
+                  <Text style={styles.routePrice}>
+                    {formatPrice(route.totalPrice)}
+                  </Text>
+                </View>
+
+                <View style={styles.routeIcons}>
+                  {route.segments.map((segment, index) => {
+                    const style = getTransportStyle(segment.type);
+                    return (
+                      <React.Fragment key={segment.id}>
+                        <View style={[styles.miniIcon, { backgroundColor: style.color }]}>
+                          <Icon name={style.icon} size={12} color="#fff" />
+                        </View>
+                        {index < route.segments.length - 1 && (
+                          <Icon name="arrow-forward" size={12} color="#ccc" />
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
+                </View>
+
+                <Text style={styles.routeDistance}>
+                  {route.totalDistance} km • {route.segments.length} chặng
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+      )}
+
+      {/* Navigation Bottom Sheet */}
+      <NavigationBottomSheet
+        ref={navigationBottomSheetRef}
+        selectedRoute={selectedRoute}
+        passedRoute={passedRoute}
+        navigationStatus={navigationStatus}
+        currentSegmentIndex={currentSegmentIndex}
+        onStartNavigation={handleStartNavigation}
+        onCloseModel={() => setVisibleModel(true)}
+      />
+      <SuccesModel
+        visible={visibleModel}
+        onClose={() => setVisibleModel(false)}
+        message="Bạn đã thành công điểm danh ngày hôm nay"
+        imageSource={require("../../assets/images/celebrate.png")}
+        imageStyle={{ width: "100%", height: 120, marginBottom: 20 }}
+      >
+        <TouchableOpacity style={{ marginTop: 12, paddingHorizontal: 40, paddingVertical: 15, backgroundColor: "#028961", borderRadius: 32 }}
+          onPress={() => { setVisibleModel(false), setNavigationStatus('idle'), setCurrentSegmentIndex(0); }}
+        >
+          <Text style={{ color: "#fff", fontFamily: Fonts.Montserrat.Medium, fontSize: 14 }}>Đã nhận 30 điểm xanh</Text>
+        </TouchableOpacity>
+      </SuccesModel>
     </SafeAreaView>
   );
 };
 
-export default MultiStageRouting;
+export default MapNavigation;

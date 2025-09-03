@@ -7,9 +7,18 @@ interface CustomModalProps {
   onClose: () => void;
   message: string;
   imageSource?: any; 
+  imageStyle?: any;
+  children?: React.ReactNode; // thêm children
 }
 
-const SuccesModel: React.FC<CustomModalProps> = ({ visible, onClose, message, imageSource }) => {
+const SuccesModel: React.FC<CustomModalProps> = ({
+  visible,
+  onClose,
+  message,
+  imageSource,
+  imageStyle,
+  children
+}) => {
   if (!visible) return null; // khi không hiển thị thì return null
 
   return (
@@ -27,12 +36,15 @@ const SuccesModel: React.FC<CustomModalProps> = ({ visible, onClose, message, im
               ? imageSource
               : require("../../assets/icons/badge.png")
           }
-          style={styles.icon}
+          style={[styles.icon, imageStyle]}
           resizeMode="contain"
         />
 
         {/* Nội dung */}
         <Text style={styles.message}>{message}</Text>
+
+        {/* Children được render dưới message */}
+        {children && <View style={styles.childrenWrapper}>{children}</View>}
       </View>
     </View>
   );
@@ -51,13 +63,14 @@ const styles = StyleSheet.create({
     left: 0,
     width: "100%",
     height: "105%",
+    zIndex: 99999,
   },
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
     paddingVertical: 40,
-    paddingHorizontal: 32,
+    paddingHorizontal: 30,
     borderRadius: 24,
     width: "90%",
   },
@@ -72,9 +85,15 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   message: {
-    fontSize: 24,
+    fontSize: 21,
     fontFamily: Fonts.DelaGothicOne,
     textAlign: "center",
     color: "#222",
+    marginBottom: 12,
+  },
+  childrenWrapper: {
+    marginTop: 8,
+    width: "100%",
+    alignItems: "center",
   },
 });

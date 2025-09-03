@@ -1,53 +1,33 @@
 import * as React from 'react';
 import { createStaticNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import SplashScreen from 'react-native-splash-screen';
 
-import Storage from '../utils/storage';
 import Home from '../screens/home';
 import Onboard from '../screens/OnBoarding';
-
 import Leaderboard from '../screens/Leaderboard';
 import RewardScreen from '../screens/Reward';
 import AuthStack from './AuthStack';
-import { User } from 'iconsax-react-native';
 import UserSettings from './UserSettings';
 import MapNavigation from './MapNavigation';
+import Storage from '../utils/storage';
 
+interface AppNavigatorProps {
+  firstTime: boolean | null;
+  setFirstTime: React.Dispatch<React.SetStateAction<boolean | null>>;
+}
 
-
-export default function AppNavigator() {
-  const [firstTime, setFirstTime] = React.useState<boolean | null>(false);
-
-  React.useEffect(() => {
-    const checkFirstTime = async () => {
-      const value = await Storage.getItem('firstTime');
-      console.log("Stored value:", value);
-
-      if (value === null) {
-
-        await Storage.setItem('firstTime', false); 
-        setFirstTime(true); 
-      } else {
-        setFirstTime(false); 
-      }
-    };
-
-    checkFirstTime();
-    SplashScreen.hide();
-  }, []);
-
-
-  // console.log(firstTime);
+export default function AppNavigator({ firstTime, setFirstTime }: AppNavigatorProps) {
+  
   const RootStack = createNativeStackNavigator({
-
     screens: {
       Onboard: {
         screen: (props) => (
           <Onboard
             {...props}
-            isFirstTime={firstTime}
-          // onFinish={() => console.log("Finish")}
+            onFinish={async () => {
+              await Storage.setItem('firstTime', false);
+              setFirstTime(false);
+            }}
           />
         ),
         options: { headerShown: false },
@@ -75,15 +55,12 @@ export default function AppNavigator() {
       Map: {
         screen: MapNavigation,
         options: { headerShown: false },
-      }
+      },
     },
-    config: {
-      initialRouteName: firstTime ? 'Onboard' : 'Home',
-    },
+    initialRouteName: firstTime ? 'Onboard' : 'Home',
   });
 
+  const AppNavigator = createStaticNavigation(RootStack);
 
-  const Navigation = createStaticNavigation(RootStack);
-
-  return <Navigation />;
+  return <AppNavigator />;
 }

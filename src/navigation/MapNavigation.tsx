@@ -6,6 +6,7 @@ import OpenStreetMapRouting from '../screens/MapNavigation';
 import MapboxSearchScreen from '../screens/SearchMap';
 import RouteSelectionScreen from '../screens/RouteResult';
 import { Route } from '../utils/Mapbox';
+import VoiceRecordingScreen from '../screens/SearchTalk';
 
 
 const Stack = createNativeStackNavigator();
@@ -21,18 +22,8 @@ export type RootStackParamList = {
       latitude: number;
       longitude: number;
     };
+    startPointName?: string;
     destinationName?: string;
-  };
-  MultiStageRouting: {
-    startPoint: {
-      latitude: number;
-      longitude: number;
-    };
-    endPoint: {
-      latitude: number;
-      longitude: number;
-    };
-    selectedRouteProps?: Route; 
   };
   MapNavigation: {
     startPoint: {
@@ -43,6 +34,7 @@ export type RootStackParamList = {
       latitude: number;
       longitude: number;
     };
+    selectedRouteProps?: Route; 
   };
 };
 const MapNavigation = () => {
@@ -55,7 +47,7 @@ const MapNavigation = () => {
             />
             <Stack.Screen name="RouteResult" component={RouteSelectionScreen} options={{ headerShown: false }} />
             <Stack.Screen name="MapNavigation" component={MultiStageRouting} options={{ headerShown: false }} />
-           
+            <Stack.Screen name="VoiceSearch" component={VoiceRecordingScreen} options={{ headerShown: false }} />
             {/* <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
             <Stack.Screen name="BankingAccount" component={BankingAccountScreen} options={{ headerShown: false }} /> */}
         </Stack.Navigator>

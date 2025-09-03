@@ -5,7 +5,7 @@ const { width, height } = Dimensions.get('window');
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    paddingTop: 35,
   },
   
   loadingContainer: {
@@ -22,16 +22,15 @@ export const styles = StyleSheet.create({
   },
   
   header: {
+    position: 'absolute',
+    top: 60,
+    left: 35,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
     backgroundColor: '#fff',
-    elevation: 2,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    borderRadius: 32,
+    zIndex: 9999,
   },
   
   backButton: {
@@ -56,7 +55,36 @@ export const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
-  
+    routesToggleButton: {
+    position: 'absolute',
+    bottom: 30,
+    left: 20,
+    right: 20,
+    backgroundColor: '#4CAF50',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+
+  },
+  navigationButtonActive: {
+    backgroundColor: '#f44336',
+  },
+
+  // Routes toggle button updates
+  navigationToggleButton: {
+    backgroundColor: '#ff9800',
+  },
+
+
+  routesToggleText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 8,
+  },
   myLocationButton: {
     position: 'absolute',
     top: 20,
@@ -64,10 +92,6 @@ export const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 12,
     borderRadius: 8,
-    elevation: 3,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
   },
   
   // Mapbox Markers
@@ -94,8 +118,8 @@ export const styles = StyleSheet.create({
   },
   
   transferMarker: {
-    width: 28,
-    height: 28,
+    width: 50,
+    height: 50,
     borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
@@ -104,8 +128,8 @@ export const styles = StyleSheet.create({
   },
   
   busStopMarker: {
-    width: 20,
-    height: 20,
+    width: 50,
+    height: 50,
     backgroundColor: '#81C784',
     borderRadius: 10,
     justifyContent: 'center',
@@ -288,10 +312,6 @@ export const styles = StyleSheet.create({
     marginVertical: 16,
     paddingVertical: 16,
     borderRadius: 12,
-    elevation: 3,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
   },
   
   navigationText: {

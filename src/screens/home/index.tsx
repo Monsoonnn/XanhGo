@@ -59,13 +59,18 @@ const Home = () => {
 
         {/* Search Bar */}
         <View style={styles.searchContainer}>
-          <TouchableOpacity style={styles.searchBar} onPressOut={() => { 
-              navigation.navigate('Map');
+          <TouchableOpacity style={styles.searchBar} onPress={() => {
+            console.log("pressed");
+            navigation.navigate('Map');
           }}>
             <Text style={styles.searchPlaceholder}>Nhập nơi đến</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.locationButton} onPressOut={() => { 
-              navigation.navigate('Map');
+          <TouchableOpacity style={styles.locationButton} onPress={() => {
+            navigation.navigate('Map', {
+              screen: 'VoiceSearch',
+              params: {
+              },
+            });
           }}>
             <Microphone width={25} height={25} />
           </TouchableOpacity>

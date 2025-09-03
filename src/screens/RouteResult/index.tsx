@@ -7,6 +7,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  Image,
 } from 'react-native';
 import MapboxGL from '@rnmapbox/maps';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -20,9 +21,20 @@ import {
   formatDuration,
   formatPrice,
   getBounds,
+  getTimeRangeString,
+  getTransportIcon,
+  calculateRouteGreenPoints,
+  calculateTotalEmission,
 } from '../../utils/Mapbox.tsx';
 import { fetchFakeRoutesFromServer, MAPBOX_ACCESS_TOKEN } from '../../utils/APIMapBox.tsx';
 import { RootStackParamList } from '../../navigation/MapNavigation.tsx';
+import SearchBar from '../../components/SearchBar/index.tsx';
+import DropDownFillter from '../../components/FillterOptions/index.tsx';
+import FillterOptions from '../../components/FillterOptions/index.tsx';
+import DropDownCustom, { DropdownItem } from '../../components/DropDownFillter/index.tsx';
+import { DotIcon } from 'phosphor-react-native';
+import Fonts from '../../constants/font.js';
+import { ArrowLeft2 } from 'iconsax-react-native';
 
 // Cấu hình Mapbox Access Token
 MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN);
@@ -36,12 +48,27 @@ const RouteSelectionScreen: React.FC = () => {
   const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [userLocation, setUserLocation] = useState<[number, number]>([0, 0]);
-  
+
   const { params } = useRoute<RouteSelectionRouteProp>();
-  const { startPoint, endPoint, destinationName } = params;
-
-
+  const { startPoint, endPoint, startPointName, destinationName } = params;
   const navigation = useNavigation<any>();
+
+  const [searchText, setSearchText] = useState<string>(destinationName || '');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const transportOptions = [
+    { id: 'bus', label: 'Xe buýt' },
+    { id: 'metro', label: 'Metro' },
+    { id: 'bike', label: 'Xe đạp' },
+    { id: 'walk', label: 'Đi bộ' }
+  ];
+
+  const [selectedTransports, setSelectedTransports] = useState<DropdownItem[]>([
+    { id: 'bus', label: 'Xe buýt', selected: false },
+    { id: 'metro', label: 'Metro', selected: false },
+    { id: 'bike', label: 'Xe đạp', selected: false },
+    { id: 'walk', label: 'Đi bộ', selected: false }
+  ]);
 
   useEffect(() => {
     const loadRoutes = async () => {
@@ -50,18 +77,18 @@ const RouteSelectionScreen: React.FC = () => {
       const result = await fetchFakeRoutesFromServer(startPoint, endPoint);
       if (result && result.length > 0) {
         setRoutes(result);
-        setSelectedRoute(result[0]);
+        // setSelectedRoute(result[0]);
         setUserLocation([startPoint.longitude, startPoint.latitude]);
-        
-        
+
+
         setTimeout(() => {
           if (result[0].segments.length > 0) {
-            selectRouteAndZoom(result[0]);
+            // selectRouteAndZoom(result[0]);
           }
         }, 500);
       }
       setLoading(false);
-    //   console.log("routes:", result);
+      //   console.log("routes:", result);
     };
     loadRoutes();
   }, [startPoint, endPoint]);
@@ -87,12 +114,15 @@ const RouteSelectionScreen: React.FC = () => {
     }
   };
 
-  const startNavigation = () => {
+  const startNavigation = (route: Route) => {
+
+    setSelectedRoute(route);
+
     if (selectedRoute) {
-      navigation.navigate("MultiStageRouting", {
+      navigation.navigate("MapNavigation", {
         startPoint,
         endPoint,
-        selectedRoute, // Truyền route đã chọn
+        selectedRouteProps: selectedRoute,
       });
     }
   };
@@ -103,18 +133,18 @@ const RouteSelectionScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#4CAF50" />
           <Text style={styles.loadingText}>Đang tìm kiếm tuyến đường tốt nhất...</Text>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
   if (routes.length === 0) {
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity style={styles.backButton} onPress={goBack}>
             <Icon name="arrow-back" size={24} color="#000" />
@@ -128,24 +158,24 @@ const RouteSelectionScreen: React.FC = () => {
             <Text style={styles.navigationText}>Thử lại</Text>
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={goBack}>
-          <Icon name="arrow-back" size={24} color="#000" />
+          <ArrowLeft2
+            size="24"
+          // color="#FF8A65"
+          />
         </TouchableOpacity>
         <View style={styles.headerInfo}>
-          <Text style={styles.headerTitle}>Chọn tuyến đường</Text>
-          <Text style={styles.headerSubtitle}>
-            Đến: {destinationName || 'Điểm đến'}
-          </Text>
+          <Text style={styles.headerTitle}>Kết quả</Text>
         </View>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.refreshButton}
           onPress={async () => {
             setLoading(true);
@@ -159,9 +189,33 @@ const RouteSelectionScreen: React.FC = () => {
           }}
         >
           <Icon name="refresh" size={24} color="#000" />
+        </TouchableOpacity> */}
+      </View>
+      <View style={[styles.locationContainer, { backgroundColor: 'white' }]}  >
+        <View style={styles.locationRow}>
+          <View style={styles.currentLocationDot} />
+          <TouchableOpacity
+            style={styles.currentLocationButton}
+            onPress={() => { navigation.goBack() }}
+          >
+
+            <Text style={styles.currentLocationText}>
+              {startPointName || 'Vị trí hiện tại'}
+            </Text>
+            <Icon name="my-location" size={16} color="black" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Search  */}
+        <TouchableOpacity onPress={() => { navigation.goBack() }}>
+          <SearchBar
+            value={searchText}
+            onChangeText={setSearchText}
+            onClear={() => navigation.goBack()}
+            loading={isLoading}
+          />
         </TouchableOpacity>
       </View>
-
       {/* Map Preview */}
       {/* <View style={styles.mapPreviewContainer}>
         <MapboxGL.MapView
@@ -236,12 +290,10 @@ const RouteSelectionScreen: React.FC = () => {
       </View> */}
 
       {/* Routes List */}
-      <View style={styles.routesSelectionContainer}>
-        <Text style={styles.routesSelectionTitle}>
-          Tìm thấy {routes.length} tuyến đường
-        </Text>
+      <FillterOptions />
 
-        <ScrollView 
+      <View style={styles.routesSelectionContainer}>
+        <ScrollView
           showsVerticalScrollIndicator={false}
           style={styles.routesScrollView}
         >
@@ -252,67 +304,85 @@ const RouteSelectionScreen: React.FC = () => {
                 styles.routeSelectionCard,
                 selectedRoute?.id === route.id && styles.selectedRouteSelectionCard
               ]}
-              onPress={() => selectRouteAndZoom(route)}
+              onPress={() => {
+                // selectRouteAndZoom(route), 
+                startNavigation(route)
+              }}
             >
               <View style={styles.routeCardHeader}>
                 <View style={styles.routeCardLeft}>
-                  <Text style={styles.routeCardTitle}>
+                  <View style={styles.routeCardTimeContainer}>
+                    <Text style={styles.routeCardTime}>{formatDuration(route.totalDuration)}</Text>
+                    <DotIcon />
+                    <Text style={{ fontFamily: Fonts.Montserrat.Regular, fontSize: 14 }}>{getTimeRangeString(route.totalDuration)} </Text>
+                  </View>
+                  {/* <Text style={styles.routeCardTitle}>
                     Tuyến đường {index + 1}
                     {index === 0 && <Text style={styles.recommendedBadge}> • Đề xuất</Text>}
-                  </Text>
-                  
-                  <View style={styles.routeCardMeta}>
+                  </Text> */}
+
+                  {/* <View style={styles.routeCardMeta}>
                     <View style={styles.routeCardMetaItem}>
                       <Icon name="schedule" size={16} color="#666" />
                       <Text style={styles.routeCardTime}>
                         {formatDuration(route.totalDuration)}
                       </Text>
                     </View>
-                    
+
                     <View style={styles.routeCardMetaItem}>
                       <Icon name="straighten" size={16} color="#666" />
                       <Text style={styles.routeCardDistance}>
                         {route.totalDistance} km
                       </Text>
                     </View>
-                    
+
                     <View style={styles.routeCardMetaItem}>
                       <Icon name="attach-money" size={16} color="#666" />
                       <Text style={styles.routeCardPrice}>
                         {formatPrice(route.totalPrice)}
                       </Text>
                     </View>
-                  </View>
+                  </View> */}
 
                   <View style={styles.routeCardTransports}>
                     {route.segments.map((segment, segIndex) => {
                       const style = getTransportStyle(segment.type);
                       return (
                         <React.Fragment key={segment.id}>
-                          <View style={[styles.transportIcon, { backgroundColor: style.color }]}>
-                            <Icon name={style.icon} size={14} color="#fff" />
-                          </View>
+                          <Image
+                            source={getTransportIcon(segment.type)}
+                            style={{ width: 28, height: 28, marginVertical: 10 }}
+                            resizeMode="contain"
+                          />
                           {segIndex < route.segments.length - 1 && (
                             <Icon name="chevron-right" size={16} color="#ccc" />
                           )}
                         </React.Fragment>
                       );
                     })}
-                    <Text style={styles.segmentsCount}>
+                    {/* <Text style={styles.segmentsCount}>
                       {route.segments.length} chặng
-                    </Text>
+                    </Text> */}
                   </View>
+                  <Text style={{ marginTop: 10, fontFamily: Fonts.Montserrat.Medium, fontSize: 14, color: '#525252' }}> Sẽ đến trong vài phút nữa</Text>
                 </View>
-
-                {selectedRoute?.id === route.id && (
+                <View style={styles.selectedIndicator}>
+                  <Text style={styles.routeCardPrice}>{formatPrice(route.totalPrice)}</Text>
+                  <Text style={styles.routeCardEmmision}>{calculateTotalEmission(route)}g CO2</Text>
+                  <Text style={styles.routeCardDistance}>
+                    {route.totalDistance} km
+                  </Text>
+                </View>
+                {/* {selectedRoute?.id === route.id && (
                   <View style={styles.selectedIndicator}>
                     <Icon name="check-circle" size={24} color="#4CAF50" />
                   </View>
-                )}
+                )} */}
+
+
               </View>
 
-              {/* Detailed segments - show only for selected route */}
-              {selectedRoute?.id === route.id && (
+              {/* {selectedRoute?.id === route.id && (
                 <View style={styles.routeCardDetails}>
                   {route.segments.map((segment, segIndex) => {
                     const style = getTransportStyle(segment.type);
@@ -328,13 +398,12 @@ const RouteSelectionScreen: React.FC = () => {
                     );
                   })}
                 </View>
-              )}
+              )} */}
             </TouchableOpacity>
           ))}
         </ScrollView>
 
-        {/* Start Navigation Button */}
-        <View style={styles.navigationContainer}>
+        {/* <View style={styles.navigationContainer}>
           <TouchableOpacity
             style={[
               styles.startNavigationButton,
@@ -346,9 +415,9 @@ const RouteSelectionScreen: React.FC = () => {
             <Icon name="navigation" size={24} color="#fff" />
             <Text style={styles.startNavigationText}>Bắt đầu điều hướng</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

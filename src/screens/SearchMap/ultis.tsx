@@ -13,6 +13,16 @@ export const getPlaceCategory = (type: string): string => {
     return categoryMap[type] || 'Địa điểm';
 };
 
+export const normalizeName = (name: string) => {
+  if (!name || typeof name !== "string") return "";
+
+  return name
+    .split(" ")                 
+    .filter(word => word.length <= 4) 
+    .join(" ")                  
+    .trim();
+}
+
 // Tính khoảng cách
 export const calculateDistance = (
     lat1: number,
@@ -46,3 +56,17 @@ export const getCategoryIcon = (category: string) => {
     };
     return iconMap[category] || 'place';
 };
+
+export const getRandomLocationImage = () => {
+  const randomIndex = Math.floor(Math.random() * 6) + 1; // 1 -> 6
+  const imageMap: Record<number, any> = {
+    1: require("../../assets/location/1.jpg"),
+    2: require("../../assets/location/2.jpg"),
+    3: require("../../assets/location/3.jpg"),
+    4: require("../../assets/location/4.jpg"),
+    5: require("../../assets/location/5.jpg"),
+    6: require("../../assets/location/6.jpg"),
+  };
+  return imageMap[randomIndex];
+};
+

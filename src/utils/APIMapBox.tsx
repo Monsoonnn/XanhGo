@@ -1,5 +1,6 @@
 import { Alert } from "react-native";
-import { Route, Location, generateRandomSegments } from "./Mapbox";
+import { Location, Route, generateRandomSegments } from "./Mapbox";
+import Geolocation from "@react-native-community/geolocation";
 
 export const MAPBOX_ACCESS_TOKEN =
   "pk.eyJ1IjoibW9uc29vbjMxIiwiYSI6ImNtZXh1aXg3YzEzdWcyanNkb3dia3dhZmoifQ.FSm9TRxZuHn86G-R_uHmMQ";
@@ -58,4 +59,59 @@ export const fetchFakeRoutesFromServer = async (
     Alert.alert("Lỗi", "Không thể tải tuyến đường từ Mapbox");
     return null;
   }
+};
+
+export const getCurrentLocation = (
+  setCurrentLocation: (loc: Location) => void,
+  setIsLocationLoading: (loading: boolean) => void,
+  cameraRef?: any
+) => {
+  setIsLocationLoading(true);
+
+  Geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords;
+      const location: Location = {
+        latitude,
+        longitude,
+        name: "Vị trí hiện tại của bạn",
+      };
+
+      setCurrentLocation(location);
+      setIsLocationLoading(false);
+
+      if (cameraRef?.current) {
+        cameraRef.current.setCamera({
+          centerCoordinate: [longitude, latitude],
+          zoomLevel: 15,
+          animationDuration: 1000,
+        });
+      }
+    },
+    (error) => {
+      console.log("Error getting location:", error);
+      setIsLocationLoading(false);
+
+      // fallback: Hà Nội
+      const defaultLocation: Location = {
+        latitude: 21.0285,
+        longitude: 105.8542,
+        name: "Hà Nội, Việt Nam",
+      };
+      setCurrentLocation(defaultLocation);
+
+      if (cameraRef?.current) {
+        cameraRef.current.setCamera({
+          centerCoordinate: [defaultLocation.longitude, defaultLocation.latitude],
+          zoomLevel: 13,
+          animationDuration: 1000,
+        });
+      }
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 10000,
+    }
+  );
 };
