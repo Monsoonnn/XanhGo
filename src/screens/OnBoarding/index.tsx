@@ -48,20 +48,19 @@ export default function Onboard({ onFinish, isFirstTime }: OnboardProps): React.
   const navigation = useNavigation<any>();
 
   const handleFinishOnboard = async () => {
-    console.log("Onboard" + isFirstTime)
+
     if (!isFirstTime) navigation.navigate('Auth');
     else navigation.navigate('Home');
   };
 
-  const nextStep = () => {
+  const nextStep = async () => {
     if (step < steps.length - 1) {
-      setStep(step + 1);
+      setStep(prev => prev + 1);
     } else {
+      await Storage.setItem('firstTime', false);
       handleFinishOnboard();
     }
   };
-
-
 
   return (
     <View style={styles.container}>
@@ -100,8 +99,10 @@ const styles = StyleSheet.create({
   description: {
     fontFamily: Fonts.Montserrat.Regular,
     fontSize: 18,
+    color: '#525252',
     textAlign: 'center',
     marginBottom: 20,
+    opacity: 0.7,
   },
   roundButton: {
     width: 60,

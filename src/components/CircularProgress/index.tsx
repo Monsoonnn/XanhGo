@@ -16,9 +16,10 @@ type Props = {
   isCompleted: boolean;
   size?: number;
   isCompletedColor?: string;
+  strokeColor?: string;
   strokeWidth?: number;
 };
-const CircularProgress = ({ percentage, isCompleted = false, size = 32, isCompletedColor, strokeWidth = 3 }: Props) => {
+const CircularProgress = ({ percentage, isCompleted = false, size = 32, isCompletedColor, strokeColor , strokeWidth = 3 }: Props) => {
   const radius = (size - 6) / 2;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
@@ -40,7 +41,7 @@ const CircularProgress = ({ percentage, isCompleted = false, size = 32, isComple
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke={isCompleted ? isCompletedColor ?? "#10B981" : "black"}
+          stroke={isCompleted ? isCompletedColor ?? "#10B981" : strokeColor ?? "black"}
           strokeWidth={strokeWidth}
           fill="transparent"
           strokeDasharray={`${circumference} ${circumference}`}

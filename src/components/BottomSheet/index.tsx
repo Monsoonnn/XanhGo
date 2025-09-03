@@ -10,6 +10,7 @@ import {
 import { Modalize } from 'react-native-modalize';
 import Icon from 'react-native-vector-icons/Feather';
 import { styles } from './styles';
+import { overlay } from 'react-native-paper';
 const { height: screenHeight } = Dimensions.get('window');
 
 // Types
@@ -25,6 +26,8 @@ interface BottomSheetProps {
   showHandle?: boolean;
   onClose?: () => void;
   children?: React.ReactNode;
+  overlayTransparent?: boolean;
+  disableScroll?: boolean; // Thêm prop mới
 }
 
 // Reusable BottomSheet Component
@@ -35,7 +38,9 @@ const BottomSheet = forwardRef<BottomSheetRef, BottomSheetProps>(
     adjustToContentHeight = true, 
     showHandle = true,
     onClose,
-    children 
+    children,
+    overlayTransparent,
+    disableScroll = false, // Mặc định là false để giữ hành vi cũ
   }, ref) => {
     const modalRef = useRef<Modalize>(null);
 
@@ -57,6 +62,11 @@ const BottomSheet = forwardRef<BottomSheetRef, BottomSheetProps>(
         handleStyle={showHandle ? styles.handle : { backgroundColor: 'transparent' }}
         modalStyle={styles.modal}
         childrenStyle={styles.childrenContainer}
+        overlayStyle={overlayTransparent ? { backgroundColor: 'transparent' } : {}}
+        disableScrollIfPossible={disableScroll}
+        scrollViewProps={{
+          scrollEnabled: !disableScroll,
+        }}
       >
         <View style={styles.container}>
           {showHandle && <View style={styles.handleBar} />}
@@ -76,22 +86,24 @@ const BottomSheet = forwardRef<BottomSheetRef, BottomSheetProps>(
   }
 );
 
-
 // Generic Content Bottom Sheet (for other use cases)
 interface ContentBottomSheetProps {
   title?: string;
   content: React.ReactNode;
   onClose?: () => void;
+  disableScroll?: boolean; // Thêm prop cho ContentBottomSheet
 }
 
 export const ContentBottomSheet = forwardRef<BottomSheetRef, ContentBottomSheetProps>(
-  ({ title, content, onClose }, ref) => {
+  ({ title, content, onClose, disableScroll = false }, ref) => {
     return (
       <BottomSheet
         ref={ref}
         title={title}
         adjustToContentHeight
         onClose={onClose}
+        overlayTransparent
+        disableScroll={disableScroll} // Truyền prop xuống
       >
         {content}
       </BottomSheet>
@@ -127,15 +139,11 @@ export const ContentBottomSheet = forwardRef<BottomSheetRef, ContentBottomSheetP
 //         <Text style={styles.exampleButtonText}>Open Content Sheet</Text>
 //       </TouchableOpacity>
 
-//       <AddCardBottomSheet
-//         ref={addCardRef}
-//         onSubmit={handlePhoneSubmit}
-//         onClose={() => console.log('Add card sheet closed')}
-//       />
-
+//       {/* Sử dụng với disableScroll */}
 //       <ContentBottomSheet
 //         ref={contentRef}
 //         title="Custom Content"
+//         disableScroll={true} // Tắt scroll
 //         content={
 //           <View style={{ padding: 20 }}>
 //             <Text>This is custom content!</Text>
@@ -149,4 +157,3 @@ export const ContentBottomSheet = forwardRef<BottomSheetRef, ContentBottomSheetP
 // };
 
 export default BottomSheet;
-

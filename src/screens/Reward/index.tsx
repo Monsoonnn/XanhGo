@@ -57,6 +57,7 @@ const RewardScreen = () => {
                 key={index}
                 percentage={item.percentage}
                 isCompleted={item.isCompleted}
+                strokeColor='#10B981'
               />
             ))}
           </View>
