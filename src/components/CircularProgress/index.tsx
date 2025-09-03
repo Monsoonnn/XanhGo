@@ -15,12 +15,15 @@ type Props = {
   percentage: number;
   isCompleted: boolean;
   size?: number;
+  isCompletedColor?: string;
+  strokeColor?: string;
+  strokeWidth?: number;
 };
-const CircularProgress = ({ percentage, isCompleted = false, size = 32 }: Props) => {
+const CircularProgress = ({ percentage, isCompleted = false, size = 32, isCompletedColor, strokeColor , strokeWidth = 3 }: Props) => {
   const radius = (size - 6) / 2;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
-  
+
   return (
     <View style={[styles.progressContainer, { width: size, height: size }]}>
       <Svg width={size} height={size} style={styles.progressSvg}>
@@ -30,7 +33,7 @@ const CircularProgress = ({ percentage, isCompleted = false, size = 32 }: Props)
           cy={size / 2}
           r={radius}
           stroke="#E5E7EB"
-          strokeWidth="3"
+          strokeWidth={strokeWidth}
           fill="transparent"
         />
         {/* Progress circle */}
@@ -38,8 +41,8 @@ const CircularProgress = ({ percentage, isCompleted = false, size = 32 }: Props)
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke={isCompleted ? "#10B981" : "#10B981"}
-          strokeWidth="3"
+          stroke={isCompleted ? isCompletedColor ?? "#10B981" : strokeColor ?? "black"}
+          strokeWidth={strokeWidth}
           fill="transparent"
           strokeDasharray={`${circumference} ${circumference}`}
           strokeDashoffset={strokeDashoffset}
@@ -52,7 +55,7 @@ const CircularProgress = ({ percentage, isCompleted = false, size = 32 }: Props)
       {/* Checkmark for completed items */}
       {isCompleted && (
         <View style={styles.checkmarkContainer}>
-          <Icon name="check" size={20} color="#10B981" />
+          <Icon name="check" size={20} color={isCompletedColor ?? "#10B981"} />
         </View>
       )}
     </View>
@@ -62,7 +65,7 @@ const CircularProgress = ({ percentage, isCompleted = false, size = 32 }: Props)
 export default CircularProgress;
 
 const styles = StyleSheet.create({
-    progressContainer: {
+  progressContainer: {
     position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',

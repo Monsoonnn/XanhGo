@@ -156,7 +156,6 @@ export const styles = StyleSheet.create({
     fontFamily: Fonts.DelaGothicOne,
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
     marginTop: 4,
   },
   addIcon: {
@@ -187,7 +186,7 @@ export const styles = StyleSheet.create({
   },
   promotionDescription: {
     fontSize: 12,
-    color: '#666',
+    color: '#black',
     marginTop: 4,
   },
   promotionStats: {
@@ -205,7 +204,7 @@ export const styles = StyleSheet.create({
   },
   statLabel: {
     fontSize: 10,
-    color: '#666',
+    color: '#black',
   },
   promotionButton: {
     backgroundColor: '#4CAF50',
@@ -280,7 +279,7 @@ export const styles = StyleSheet.create({
   },
   offerSubtitle: {
     fontSize: 12,
-    color: '#666',
+    color: '#black',
     marginBottom: 4,
   },
   offerDiscount: {
@@ -317,7 +316,7 @@ export const styles = StyleSheet.create({
   },
   nearbyAddress: {
     fontSize: 12,
-    color: '#666',
+    color: '#black',
     marginBottom: 6,
   },
   nearbyTags: {
@@ -357,7 +356,7 @@ export const styles = StyleSheet.create({
   },
   challengeSubtitle: {
     fontSize: 14,
-    color: '#666',
+    color: '#black',
     marginBottom: 8,
   },
   challengeButton: {

@@ -15,8 +15,12 @@ import { styles } from './styles';
 import BottomBar from '../../components/BottomBar';
 import OfferCard from '../../components/OfferCard';
 import NearbyCard from '../../components/NearbyCard';
+import { useNavigation } from '@react-navigation/native';
 const { width } = Dimensions.get("window");
 const Home = () => {
+
+  const navigation = useNavigation<any>();
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#4CAF50" barStyle="light-content" />
@@ -55,10 +59,19 @@ const Home = () => {
 
         {/* Search Bar */}
         <View style={styles.searchContainer}>
-          <View style={styles.searchBar}>
+          <TouchableOpacity style={styles.searchBar} onPress={() => {
+            console.log("pressed");
+            navigation.navigate('Map');
+          }}>
             <Text style={styles.searchPlaceholder}>Nhập nơi đến</Text>
-          </View>
-          <TouchableOpacity style={styles.locationButton}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.locationButton} onPress={() => {
+            navigation.navigate('Map', {
+              screen: 'VoiceSearch',
+              params: {
+              },
+            });
+          }}>
             <Microphone width={25} height={25} />
           </TouchableOpacity>
         </View>

@@ -1,0 +1,276 @@
+import {
+  Dimensions,
+  StyleSheet,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Fonts from '../../constants/font';
+const { width, height } = Dimensions.get('window');
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 35,
+    backgroundColor: '#fff',
+  },
+  searchContainer: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    maxHeight: height * 0.6,
+    zIndex: 1000,
+    // elevation: 5,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.1,
+    // shadowRadius: 4,
+  },
+  searchHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  backButton: {
+    paddingVertical: 10,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontFamily: Fonts.Montserrat.SemiBold,
+    textAlign: 'center',
+    flex: 1,
+
+  },
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+    paddingLeft: 13,
+
+  },
+  currentLocationDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#D4D4D4',
+    marginRight: 16,
+  },
+  currentLocationButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 32,
+    borderWidth: 1,
+    borderColor: '#D4D4D4',
+
+  },
+  currentLocationText: {
+    fontSize: 14,
+    fontFamily: Fonts.Montserrat.Regular,
+    // color: '#4CAF50',
+    fontWeight: '500',
+    flex: 1,
+  },
+  searchInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 8,
+    paddingLeft: 12,
+    paddingVertical: 10,
+    marginBottom: 8,
+  },
+  destinationDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#29B26B',
+    marginRight: 16,
+  },
+  destinationInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '92%',
+    borderRadius: 32,
+    borderWidth: 1,
+    borderColor: '#D4D4D4',
+    paddingLeft: 12,
+    paddingRight: 12,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 14,
+    color: 'black',
+
+  },
+  clearButton: {
+    padding: 4,
+    marginLeft: 8,
+  },
+  loadingIcon: {
+    marginLeft: 8,
+    marginVertical: 12,
+  },
+  nearbyContainer: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 16,
+    paddingTop: 8,
+  },
+  nearbyTitle: {
+    fontSize: 20,
+    fontFamily: Fonts.DelaGothicOne,
+    marginBottom: 12,
+  },
+  nearbyList: {
+    flexDirection: 'row',
+    marginBottom: 12,
+  },
+  nearbyItem: {
+    marginRight: 12,
+    flexDirection: 'row',
+    gap: 12,
+    borderWidth: 0.5,
+    borderColor: '#F1F5EA',
+    backgroundColor: '#F1F5EA',
+    borderRadius: 32,
+    padding: 10,
+  },
+  suggestionsContainer: {
+    maxHeight: height * 1,
+    backgroundColor: '#fff',
+    paddingHorizontal: 12,
+  },
+  suggestionItem: {
+    maxHeight: 800,
+    borderRadius: 12,
+    margin: 4, 
+    backgroundColor: '#F1F5EA',
+  },
+  suggestionIcon: {
+    width: "100%",
+    height: 100,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  suggestionContent: {
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+  },
+  suggestionName: {
+    fontSize: 16,
+    fontFamily: Fonts.Montserrat.SemiBold,
+    marginBottom: 4,
+  },
+  suggestionAddress: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 4,
+  },
+  suggestionMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  suggestionCategory: {
+    fontSize: 12,
+    color: '#999',
+  },
+  suggestionDivider: {
+    fontSize: 12,
+    color: '#999',
+  },
+  suggestionDistance: {
+    fontSize: 12,
+    color: '#4CAF50',
+    fontWeight: '500',
+  },
+  mapContainer: {
+    flex: 1,
+    position: 'relative',
+  },
+  map: {
+    flex: 1,
+  },
+  myLocationButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    width: 48,
+    height: 48,
+    backgroundColor: '#fff',
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 4,
+
+  },
+  currentLocationMarker: {
+    width: 50,
+    height: 50,
+    borderRadius: 10,
+    backgroundColor: '#4CAF50',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 3,
+    borderColor: '#fff',
+  },
+  currentLocationInner: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#fff',
+  },
+  selectedPlaceMarker: {
+    width: 50,
+    height: 50,
+    borderRadius: 18,
+    backgroundColor: '#FF5722',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 3,
+    borderColor: '#fff',
+  },
+  selectedPlaceInfo: {
+    backgroundColor: '#fff',
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
+    elevation: 4,
+  },
+  placeInfoContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  placeInfoText: {
+    marginLeft: 12,
+    flex: 1,
+  },
+  placeInfoName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 4,
+  },
+  placeInfoAddress: {
+    fontSize: 14,
+    color: '#666',
+  },
+  directionsButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f0f8f0',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  directionsText: {
+    marginLeft: 4,
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#4CAF50',
+  },
+});
