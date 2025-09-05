@@ -34,12 +34,14 @@ const BottomBar = ({ home, profile, tree, leaderboard }: Props) => {
         <Trophy size={24} color={leaderboard ? "#4CAF50" : "#999"} />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.navItem}>
+      <TouchableOpacity style={styles.navItem} onPress={() => {
+        navigation.navigate('Tree');
+      }}>
         <Tree size={24} color={tree ? "#4CAF50" : "#999"} />
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.navItem} onPress={() => {
-       // navigation.navigate('Leaderboard');
+        // navigation.navigate('Leaderboard');
 
       }}  >
         <Profile size={24} color={profile ? "#4CAF50" : "#999"} />
